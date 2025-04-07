@@ -9,10 +9,8 @@ import logoType from "../../assets/imagens/Logo-gato.png";
 export function Header(){
 
     // Variáveis condicional de login ou dashboard.
-    const signed =  true;
+    const signed =  false;
     const loadingAuth = false;
-
-
 
     return(
         <div className="w-full flex items-center justify-center h-30 bg-white drop-shadow mb-4">
@@ -35,14 +33,18 @@ export function Header(){
                 
                 {/* Deslogado */}
                 { !loadingAuth && !signed && (
-                    <Link to={"/login"}>
-                        <div className="flex h-30 justify-center items-center flex-col">
-                            <div className="border-2 rounded-full p-1 border-[#65391d]">
-                                <FiLogIn size={30} color="#65391d" />
-                            </div>
-                            <span>Entrar</span>
+                    
+                    <div className="flex h-30 justify-center items-center flex-col">
+                        <div className="border-2 rounded-full p-1 border-[#65391d]">
+                            <FiLogIn size={30} color="#65391d" />
                         </div>
-                    </Link>
+                        <Link to={"/login"}>
+                            <span className="text-[12px] hover:underline">Entrar</span>
+                        </Link>
+                        <Link to={"/registrar"}>
+                            <span className="text-[12px] hover:underline">Cadastrar-se</span>
+                        </Link>
+                    </div>
                 )}
             </header>
         </div>
