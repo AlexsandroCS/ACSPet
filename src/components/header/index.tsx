@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FiUser, FiLogIn } from "react-icons/fi";
 
 // Logotype do site.
-import logoType from "../../assets/imagens/Logo-gato.png";
+import logoType from "../../assets/imagens/Logo-AcsPet.png";
 
 export function Header(){
 
