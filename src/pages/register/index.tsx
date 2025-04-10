@@ -1,5 +1,5 @@
 // react e react router dom.
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 // Logotype do site.
@@ -12,6 +12,9 @@ import { Input } from "../../components/input";
 // Firebase.
 import { auth } from "../../services/firebaseConnection";
 import { createUserWithEmailAndPassword, updateProfile, signOut } from "firebase/auth"; 
+
+// Context modificando informações do usuário.
+import { AuthContext } from "../../contexts/AuthContext";
 
 // Validação de formulários.
 import { useForm } from "react-hook-form";
@@ -29,6 +32,8 @@ type FormData = z.infer<typeof schema>
 export function Register(){
 
     const navigate = useNavigate();
+
+    const { handleInfoUser } = useContext(AuthContext);
 
     const {register, handleSubmit, formState: { errors }} = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -48,11 +53,18 @@ export function Register(){
         createUserWithEmailAndPassword(auth, data.email, data.password).then(async (user) => {
             await updateProfile(user.user, {
                 displayName: data.name
-            })
+            });
+
+            // Atualizando usuários no context após o cadastro.
+            handleInfoUser({
+                uid: user.user.uid,
+                name: data.name,
+                email: data.email
+            });
 
             navigate("/painel-acspet",{replace: true});
         })
-        .catch((error) => {
+        .catch(() => {
             console.log("Ocorreu um erro!");
         })
     }
@@ -77,7 +89,7 @@ export function Register(){
                         <Input type={"password"} placeholder={"Digite uma senha"} name={"password"} register={register} error={errors.password?.message}/>
                     </div>
 
-                    <button type="submit" className="bg-[#65391d] w-full rounded-md text-[#f2d1ae] h-10 font-medium">Registrar</button>
+                    <button type="submit" className="bg-[#785539] w-full rounded-md text-[#f2d1ae] h-10 font-medium">Registrar</button>
                 </form>
 
                 <Link to={"/login"}>

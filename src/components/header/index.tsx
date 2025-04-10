@@ -1,16 +1,17 @@
 import { Link } from "react-router-dom";
 
 // Import do ícones.
-import { FiUser, FiLogIn } from "react-icons/fi";
+import { FiUser, FiShoppingCart } from "react-icons/fi";
 
 // Logotype do site.
 import logoType from "../../assets/imagens/Logo-AcsPet.png";
 
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+
 export function Header(){
 
-    // Variáveis condicional de login ou dashboard.
-    const signed =  false;
-    const loadingAuth = false;
+    const {signed, loadingAuth} = useContext(AuthContext);
 
     return(
         <div className="w-full flex items-center justify-center h-30 bg-white drop-shadow mb-4">
@@ -23,8 +24,8 @@ export function Header(){
                 { !loadingAuth && signed && (
                     <Link to={"/painel-acspet"}>
                         <div className="flex h-30 justify-center items-center flex-col">
-                            <div className="border-2 rounded-full p-1 border-[#65391d]">
-                                <FiUser size={30} color="#65391d" />
+                            <div className="border-2 rounded-full p-1 border-[#785539]">
+                                <FiUser size={30} color="#785539" />
                             </div>
                             <span>Painel</span>
                         </div>
@@ -34,16 +35,30 @@ export function Header(){
                 {/* Deslogado */}
                 { !loadingAuth && !signed && (
                     
-                    <div className="flex h-30 justify-center items-center flex-col">
-                        <div className="border-2 rounded-full p-1 border-[#65391d]">
-                            <FiLogIn size={30} color="#65391d" />
+                    <div className="flex gap-6">
+
+                        <div className="flex h-30 justify-between items-center">
+                            <div className="border-2 rounded-full p-1 border-[#785539]">
+                                <FiUser size={30} color="#785539"/>
+                            </div>
+
+                            <div className="flex flex-col justify-center items-start ml-1.5">
+                                <span className="text-[12px] text-[#000000] font-bold">
+                                    <Link to={"/login"} className="text-[#785539] uppercase hover:underline mr-1">Entrar </Link>
+                                    ou<br />
+                                    <Link to={"/registrar"} className="text-[#785539] uppercase hover:underline">Cadastre-se</Link>
+                                </span>
+                            </div>
                         </div>
-                        <Link to={"/login"}>
-                            <span className="text-[12px] hover:underline">Entrar</span>
-                        </Link>
-                        <Link to={"/registrar"}>
-                            <span className="text-[12px] hover:underline">Cadastrar-se</span>
-                        </Link>
+
+                        <div className="flex h-30 justify-center items-center">
+                            <div className="flex flex-col justify-center items-center">
+                                <Link to={"#"} className="relative">
+                                    <FiShoppingCart size={30} color="#785539"/>
+                                    <span className="absolute -right-2 -top-2 bg-[#ff0062] rounded-full w-6 h-6 flex items-center justify-center text-white font-bold text-[14px]">2</span>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 )}
             </header>

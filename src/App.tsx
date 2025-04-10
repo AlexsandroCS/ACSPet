@@ -8,6 +8,7 @@ import { Product } from "./pages/product";
 import { NewProduct } from "./pages/dashboard/newProduct";
 
 import { Layout } from "./components/layout";
+import { Private } from "./routes/Private";
 
 const router = createBrowserRouter([
     {
@@ -23,11 +24,12 @@ const router = createBrowserRouter([
             },
             {
                 path: "/painel-acspet",
-                element: <Dashboard/>
+                element: <Private><Dashboard/></Private>
             },
             {
                 path: "/painel-acspet/registrar-produto",
-                element: <NewProduct/>
+                element: 
+                    <Private><NewProduct/></Private>
             }
         ]
     },

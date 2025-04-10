@@ -5,8 +5,13 @@ import './index.css'
 import { RouterProvider } from 'react-router-dom'
 import router from './App'
 
+// Provider de informações de usuário logado.
+import AuthProvider from './contexts/AuthContext'
+
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <RouterProvider router={router}/>
+    <StrictMode>
+        <AuthProvider>
+            <RouterProvider router={router}/>
+        </AuthProvider>
   </StrictMode>,
 )
