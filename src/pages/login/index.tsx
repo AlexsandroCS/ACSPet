@@ -9,6 +9,9 @@ import logoType from "../../assets/imagens/Logo-AcsPet.png";
 import { Container } from "../../components/container";
 import { Input } from "../../components/input";
 
+// Button Personalizado.
+import { ButtonDefault } from "../../utils/buttons";
+
 // Firebase.
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../services/firebaseConnection"; 
@@ -67,7 +70,7 @@ export function Login(){
                         <Input type={"password"} placeholder={"Digite sua senha"} name={"password"} error={errors.password?.message} register={register}/>
                     </div>
 
-                    <button type="submit" className="bg-[#65391d] w-full rounded-md text-[#f2d1ae] h-10 font-medium">Acessar</button> 
+                    <ButtonDefault title="Acessar"/>
                 </form>
 
                 <Link to={"/registrar"}>

@@ -89,7 +89,7 @@ export function Register(){
                         <Input type={"password"} placeholder={"Digite uma senha"} name={"password"} register={register} error={errors.password?.message}/>
                     </div>
 
-                    <button type="submit" className="bg-[#785539] w-full rounded-md text-[#f2d1ae] h-10 font-medium">Registrar</button>
+                    <button type="submit" className="w-full mt-3 text-center font-bold rounded uppercase text-xs p-2.5 cursor-pointer bg-[#f2d1ae] text-[#313131] hover:bg-[#785539] hover:text-[#fff] transition duration-300">Registrar</button>
                 </form>
 
                 <Link to={"/login"}>

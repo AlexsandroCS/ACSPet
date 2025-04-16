@@ -24,3 +24,4 @@ export function Private({children}: PrivateProps): any{
 
     return children;
 }
+
