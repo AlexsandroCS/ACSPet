@@ -9,15 +9,17 @@ import { FiUpload } from "react-icons/fi";
 import { selectType} from "../../../utils/formProducts";
 
 // Formulário.
-import { useWatch } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { FoodPet } from "../../../components/forms/foodPet";
 import { ToysPet } from "../../../components/forms/toysPet";
 
+import { useWatch } from "react-hook-form";
+
+
 const componentList = [
-    { name: "Ração", components: <FoodPet/> },
-    { name: "Brinquedo", components: <ToysPet/> },
+    { name: "Ração", components: <FoodPet type="Ração"/> },
+    { name: "Brinquedo", components: <ToysPet type="Brinquedo"/> },
 ]
 
 export function NewProduct(){

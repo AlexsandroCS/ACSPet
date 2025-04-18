@@ -1,5 +1,6 @@
 import { Control, Controller, FieldValues, RegisterOptions, UseFormRegister, Path } from "react-hook-form";
 import Select from "react-select";
+import { useCallback } from "react";
 
 // Input.
 interface InputProps{
@@ -48,6 +49,47 @@ export function Input({type, placeholder, name, label, register, rules, error}: 
             />
             {error && <p className="text-[#EB0000FF] my-1 text-sm">{error}</p>}
         </div>
+    );
+}
+
+export function InputPricess({ type, placeholder, name, label, register, rules, error }: InputProps) {
+    const handleKeyUp = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLInputElement;
+        let value = target.value.replace(/\D/g, '');
+        
+        // Remove os zeros à esquerda, menos se for o único dígito antes dos centavos.
+        value = value.replace(/^0+/, '') || '0';
+        
+        // Garante pelo menos dois dígitos para os centavos.
+        if (value.length === 1) value = '0' + value;
+        if (value.length === 0) value = '000';
+        
+        const cents = value.slice(-2);
+        let integerPart = value.slice(0, -2) || '0';
+        
+        // Adiciona separadores de milhar apenas quando necessário.
+        if (integerPart.length > 3) {
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+      
+        target.value = integerPart + ',' + cents;
+    }, []);
+  
+    return (
+        <div className="mb-3.5 mr-5">
+            <label className="mb-2 font-bold text-xs">{label}</label>
+            <input
+            className={`w-full min-w-[300px] border-2 rounded-md h-11 px-2 text-[#2c2c2c] text-xs font-bold outline-0 ${error ? "border-[#EB0000] hover:border-[#EB0000]" : "border-[#E5E7EB] hover:border-[#785539]"}`}
+            type={type}
+            placeholder={placeholder}
+            onKeyUp={handleKeyUp}
+            {...register(name, {
+                ...rules,
+                    validate: { validCurrency: (v) => /^\d{1,3}(\.\d{3})*,\d{2}$/.test(v) || "Formato inválido"}
+                })}
+            />
+            {error && <p className="text-[#EB0000FF] my-1 text-sm">{error}</p>}
+      </div>
     );
 }
 

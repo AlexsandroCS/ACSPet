@@ -1,4 +1,4 @@
-import { Input, SelectCustom, Textarea } from "../input";
+import { Input, InputPricess, SelectCustom, Textarea } from "../input";
 import { ButtonDefault } from "../../utils/buttons";
 import { 
     selectAnimal,
@@ -8,9 +8,17 @@ import {
     selectMaterial,
 } from "../../utils/formProducts";
 
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../../services/firebaseConnection";
+
+import { toastCustom } from "../../utils/toastCustom";
 
 const schema = z.object({
     type: z.string().nonempty("O tipo do produto é obrigatório!"),
@@ -25,18 +33,22 @@ const schema = z.object({
     packaging:z.string().nonempty("É obrigatório informar a quantidade de brinquedo por embalagem!"),
     indication:z.string().nonempty("É obrigatório informar qual é a indicação do brinquedo!"),
     amount:z.string().nonempty("É obrigatório informar a quantidade de brinquedo em estoque!"),
+    purchasePrice:z.string().nonempty("É obrigatório informar um valor positivo e unitário pago pelo brinquedo em estoque!"),
+    sellingPrice:z.string().nonempty("É obrigatório informar um valor positivo e unitário de venda do brinquedo em estoque!"),
     description:z.string().nonempty("É obrigatório informar uma descrição sobre o brinquedo!"),
 });
 
 type FormData = z.infer<typeof schema>;
 
 interface ToysPetProps{
-    type?: string;
+    type: string;
 }
 
 export function ToysPet({type}: ToysPetProps){
+    
+    const { user } = useContext(AuthContext);
 
-    const {control, register, handleSubmit, formState:{errors}} = useForm<FormData>({
+    const {control, register, handleSubmit, formState:{errors}, reset} = useForm<FormData>({
         resolver: zodResolver(schema),
         mode: "onChange",
         defaultValues: {
@@ -45,7 +57,60 @@ export function ToysPet({type}: ToysPetProps){
     });
 
     function onSubmitForm(data: FormData){
-        console.log(data);
+
+        const purchasePrice = parseFloat(data.purchasePrice.replace(/\./g, '').replace(',', '.'));
+        const sellingPrice = parseFloat(data.sellingPrice.replace(/\./g, '').replace(',', '.'));
+
+        if(purchasePrice > sellingPrice){
+            toastCustom({
+                nameUser: user?.name,
+                typeProduct: type,
+                message: " valor do brinquedo em estoque não pode ser maior do que o valor de venda.",
+                typeToast: "error"
+            });
+
+            return;
+        }
+        
+        addDoc(collection(db,"toys"), {
+            type: data.type,
+            name: data.name,
+            animal: data.animal,
+            age: data.age,
+            width: data.width,
+            height: data.height,
+            depth: data.depth,
+            color: data.color,
+            material: data.material,
+            packaging: data.packaging,
+            indication: data.indication,
+            amount: data.amount,
+            purchasePrice: purchasePrice,
+            sellingPrice: sellingPrice,
+            description: data.description,
+            date: new Date(),
+            registrantId: user?.uid
+        })
+        .then(() => {
+            reset();
+            
+            toastCustom({
+                nameUser: user?.name,
+                typeProduct: type,
+                message: "registrada com sucesso",
+                typeToast: "success"
+            });
+
+            console.log(data);
+        })
+        .catch(() => {
+            toastCustom({
+                nameUser: user?.name,
+                typeProduct: type,
+                message: "não foi registrada",
+                typeToast: "warning"
+            });
+        })
     }
 
     return(
@@ -147,6 +212,24 @@ export function ToysPet({type}: ToysPetProps){
                                 register={register}
                                 error={errors.amount?.message}
                                 placeholder="Informe a quantidade de brinquedo."
+                            />
+
+                            <InputPricess 
+                                name="purchasePrice"
+                                type="string"
+                                label="Valor de compra do produto"
+                                register={register}
+                                error={errors.purchasePrice?.message}
+                                placeholder="Informe o valor pago pelo produto."
+                            />
+
+                            <InputPricess 
+                                name="sellingPrice"
+                                type="string"
+                                label="Valor de venda do produto"
+                                register={register}
+                                error={errors.sellingPrice?.message}
+                                placeholder="Informe o valor de venda do produto."
                             />
                         </div>
 
