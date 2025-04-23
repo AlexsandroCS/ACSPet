@@ -29,14 +29,15 @@ const schema = z.object({
     age: z.string().nonempty("Você precisa selecionar uma idade para o pet!"),
     sizeGrains: z.string().nonempty("O tamanho do grão do produto é obrigatório!"),
     weightProduct: z.string().nonempty("O peso do produto é obrigatório!"),
-    flavor:z.string().nonempty("O sabor do produto é obrigatório!"),
-    textureProduct:z.string().nonempty("É obrigatório informar a textura do produto!"),
-    dye:z.string().nonempty("É obrigatório informar se o produto contém corante!"),
-    indication:z.string().nonempty("É obrigatório informar qual é a indicação do produto!"),
-    amount:z.string().nonempty("É obrigatório informar a quantidade de produto em estoque!"),
-    purchasePrice:z.string().nonempty("É obrigatório informar um valor positivo e unitário pago pelo produto em estoque!"),
+    flavor: z.string().nonempty("O sabor do produto é obrigatório!"),
+    textureProduct: z.string().nonempty("É obrigatório informar a textura do produto!"),
+    dye: z.string().nonempty("É obrigatório informar se o produto contém corante!"),
+    indication: z.string().nonempty("É obrigatório informar qual é a indicação do produto!"),
+    amount: z.string().nonempty("É obrigatório informar a quantidade de produto em estoque!"),
+    purchasePrice: z.string().nonempty("É obrigatório informar um valor positivo e unitário pago pelo produto em estoque!"),
     sellingPrice: z.string().nonempty("É obrigatório informar um valor positivo e unitário de venda do produto em estoque!"),
-    description:z.string().nonempty("É obrigatório informar uma descrição sobre o produto!"),
+    description: z.string().nonempty("É obrigatório informar uma descrição sobre o produto!"),
+    url: z.string().nonempty("É obrigatório informar uma url de imagem do produto!"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -89,7 +90,8 @@ export function FoodPet({type}: FoodPetProps){
             sellingPrice: sellingPrice,
             description: data.description,
             date: new Date(),
-            registrantId: user?.uid
+            registrantId: user?.uid,
+            url: data.url
         })
         .then(() => {
             reset();
@@ -228,6 +230,14 @@ export function FoodPet({type}: FoodPetProps){
                             register={register}
                             error={errors.description?.message}
                             placeholder="Descrição do produto..."
+                        />
+
+                        <Input 
+                            name="url"
+                            type="text" 
+                            label="Informa uma url de imagem" 
+                            register={register} error={errors.url?.message} 
+                            placeholder="Informe a url de uma imagem do produto"
                         />
                     </div>
                     

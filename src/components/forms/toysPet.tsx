@@ -36,6 +36,7 @@ const schema = z.object({
     purchasePrice:z.string().nonempty("É obrigatório informar um valor positivo e unitário pago pelo brinquedo em estoque!"),
     sellingPrice:z.string().nonempty("É obrigatório informar um valor positivo e unitário de venda do brinquedo em estoque!"),
     description:z.string().nonempty("É obrigatório informar uma descrição sobre o brinquedo!"),
+    url:z.string().nonempty("É obrigatório informar uma url de imagem do produto!"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -89,7 +90,8 @@ export function ToysPet({type}: ToysPetProps){
             sellingPrice: sellingPrice,
             description: data.description,
             date: new Date(),
-            registrantId: user?.uid
+            registrantId: user?.uid,
+            url: data.url
         })
         .then(() => {
             reset();
@@ -239,6 +241,14 @@ export function ToysPet({type}: ToysPetProps){
                             register={register}
                             error={errors.description?.message}
                             placeholder="Descrição do produto..."
+                        />
+
+                        <Input 
+                            name="url"
+                            type="text" 
+                            label="Informa uma url de imagem" 
+                            register={register} error={errors.url?.message} 
+                            placeholder="Informe a url de uma imagem do produto"
                         />
                     </div>
                     
